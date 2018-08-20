@@ -3,7 +3,8 @@
 
 下载demo/log-tools中的yaml文件
 
-##一. 执行所有的yaml文件
+
+一. 执行所有的yaml文件
 
 ```
 # kubectl apply -f .
@@ -33,7 +34,7 @@ d. demo中的kibana-deployment.yaml，去掉了原版中以下部分内容。否
             value: /api/v1/namespaces/kube-system/services/kibana-logging/proxy
 ```
 
-##二、访问kibina界面
+二、访问kibina界面
 
 ```
 http://222.128.2.110:30010
