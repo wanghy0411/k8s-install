@@ -1,4 +1,4 @@
-#单master+多node安装
+单master+多node安装
 
 本文介绍如何安装kubernetes1.11.2的高可用集群
 
@@ -23,7 +23,7 @@ IP: 10.70.13.220
 此IP由三台master虚拟出来，用于高可用。集群外部实际访问的是这个地址
 ```
 
-##一、准备工作（所有服务器）：
+一、准备工作（所有服务器）：
 1.1 关闭swap,最好是安装CentOS的时候就不安装swap分区
 
 1.2 写hosts文件，绑定所有服务器
@@ -86,7 +86,7 @@ vm.swappiness=0
 # lsmod | grep ip_vs
 ```
 
-##二、安装组件（所有服务器）
+二、安装组件（所有服务器）
 
 2.1 设置使用阿里镜像安装建立repo文件：
 ```
@@ -122,7 +122,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs --pod-infra-container-image=registr
 # systemctl enable kubelet && systemctl start kubelet
 ```
 
-##三、配置haproxy和keepalived（三台master上安装）
+三、配置haproxy和keepalived（三台master上安装）
 3.1 下载haproxy镜像
 ```
 # docker pull haproxy:1.7.8-alpine
@@ -176,7 +176,7 @@ _注意：enp0s3为网卡标识，请根据具体的服务器网卡进行调整_
 # ip a del 10.70.13.220/32 dev enp0s3
 ```
 
-##四、master安装
+四、master安装
 
 4.1 设置配置文件
 ```
@@ -242,7 +242,7 @@ kubeadm join 10.70.13.220:8443 --token 59mk2s.6xlwmagjrujewq6i --discovery-token
 # kubectl get node
 ```
 
-##五、node安装
+五、node安装
 5.1 执行之前记录下的串，例如：
 ```
 # kubeadm join 10.70.13.229:6443 --token 24cser.h747zmiipvikbgq8 --discovery-token-ca-cert-hash sha256:1b0b32be09c2ab5635da85eb9fcc23a67497a44b03a3072ae694ca07a884e7d6
@@ -253,7 +253,7 @@ kubeadm join 10.70.13.220:8443 --token 59mk2s.6xlwmagjrujewq6i --discovery-token
 # kubectl get node
 ```
 
-##小技巧
+######小技巧#######
 遗忘join串的话,可以使用如下方法获取
 ```
 # kubeadm token create --print-join-command
