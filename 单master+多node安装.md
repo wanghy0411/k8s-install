@@ -206,6 +206,8 @@ kubeadm join 10.70.13.229:6443 --token 24cser.h747zmiipvikbgq8 --discovery-token
 # kubectl get node
 ```
 
+
+
 ----小技巧
 遗忘join串的话,可以使用如下方法获取
 ```
