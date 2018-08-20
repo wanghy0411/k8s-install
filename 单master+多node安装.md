@@ -1,4 +1,4 @@
-#单master+多node安装
+单master+多node安装
 
 本文介绍如何安装kubernetes1.11.2的简单集群
 
@@ -17,7 +17,7 @@ IP: 10.70.13.224 k8s-node01
 IP: 10.70.13.225 k8s-node02
 ```
 
-##一、准备工作（所有服务器）：
+一、准备工作（所有服务器）：
 1.1 关闭swap,最好是安装CentOS的时候就不安装swap分区
 
 1.2 写hosts文件，绑定所有服务器
@@ -78,7 +78,7 @@ vm.swappiness=0
 # lsmod | grep ip_vs
 ```
 
-##二、安装组件（所有服务器）
+二、安装组件（所有服务器）
 
 2.1 设置使用阿里镜像安装建立repo文件：
 ```
@@ -114,7 +114,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs --pod-infra-container-image=registr
 # systemctl enable kubelet && systemctl start kubelet
 ```
 
-##三、master安装
+三、master安装
 
 3.1 设置配置文件
 ```
@@ -195,7 +195,7 @@ kubeadm join 10.70.13.229:6443 --token 24cser.h747zmiipvikbgq8 --discovery-token
 # kubectl get node
 ```
 
-##四、node安装
+四、node安装
 4.1 执行之前记录下的串，例如：
 ```
 # kubeadm join 10.70.13.229:6443 --token 24cser.h747zmiipvikbgq8 --discovery-token-ca-cert-hash sha256:1b0b32be09c2ab5635da85eb9fcc23a67497a44b03a3072ae694ca07a884e7d6
@@ -206,7 +206,7 @@ kubeadm join 10.70.13.229:6443 --token 24cser.h747zmiipvikbgq8 --discovery-token
 # kubectl get node
 ```
 
-##小技巧
+小技巧
 遗忘join串的话,可以使用如下方法获取
 ```
 # kubeadm token create --print-join-command
