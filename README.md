@@ -7,4 +7,4 @@
 
 2、日志归集系统efk（Elasticsearch+Fluentd+Kibana）的安装
 
-3、监控系统（prometheus+grafana）的安装
+3、监控系统（node-exporter+prometheus+grafana）的安装
