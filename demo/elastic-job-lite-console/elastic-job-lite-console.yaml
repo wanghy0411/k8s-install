@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic-job-lite-console
+  labels:
+    name: elastic-job-lite-console
+spec:
+  selector:
+    name: elastic-job-lite-console
+  ports:
+  - port: 8899
+    targetPort: 8899
+    nodePort: 30008
+  type: NodePort
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: elastic-job-lite-console
+  labels:
+    name: elastic-job-lite-console
+spec:
+  replicas: 1
+  selector:
+    name: elastic-job-lite-console
+  template:
+    metadata:
+      labels:
+        name: elastic-job-lite-console
+    spec:
+      containers:
+      - name: elastic-job-lite-console
+        image: registry.cn-beijing.aliyuncs.com/application-tools/elastic-job-lite-console:v2.1.5
+        volumeMounts:
+        - name: host-time
+          mountPath: /etc/localtime
+        ports:
+        - containerPort: 8899
+      volumes:
+      - name: host-time
+        hostPath:
+          path: /etc/localtime
