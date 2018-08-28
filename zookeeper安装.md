@@ -14,6 +14,7 @@ mkdir zookeeper
 groupadd USER
 useradd -g USER zookeeper
 chown -R zookeeper:USER /var/lib/zookeeper
+chmod 777 /var/lib/zookeeper
 ```
 
 4、执行yaml文件
