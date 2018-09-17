@@ -1,6 +1,6 @@
 单master+多node安装
 
-本文介绍如何安装kubernetes1.11.2的简单集群
+本文介绍如何安装kubernetes1.11.3的简单集群
 
 由于google被墙，国内网络不能正常访问；因此yaml文件中使用的很多镜像地址调整到本人在阿里云上申请的镜像服务，可以直接使用。
 
@@ -122,7 +122,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs --pod-infra-container-image=registr
 
 apiVersion: kubeadm.k8s.io/v1alpha2
 kind: MasterConfiguration
-kubernetesVersion: v1.11.2
+kubernetesVersion: v1.11.3
 imageRepository: registry.cn-beijing.aliyuncs.com/k8s-install
 
 apiServerCertSANs:
