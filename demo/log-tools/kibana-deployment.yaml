@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: kibana-logging
-        image: registry.cn-beijing.aliyuncs.com/efk-install/kibana-oss:6.2.4
+        image: registry.cn-beijing.aliyuncs.com/efk-install/kibana-oss:6.3.2
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:
@@ -31,8 +31,8 @@ spec:
         env:
           - name: ELASTICSEARCH_URL
             value: http://elasticsearch-logging:9200
-        #  - name: SERVER_BASEPATH
-        #    value: /api/v1/namespaces/kube-system/services/kibana-logging/proxy
+#          - name: SERVER_BASEPATH
+#            value: /api/v1/namespaces/kube-system/services/kibana-logging/proxy
         ports:
         - containerPort: 5601
           name: ui
