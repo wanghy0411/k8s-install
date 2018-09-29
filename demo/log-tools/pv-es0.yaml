@@ -1,8 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-    name: pv-es-1
-    namespace: kube-system
+    name: pv-es0
 spec:
     capacity:
       storage: 90Gi
@@ -10,5 +9,5 @@ spec:
       - ReadWriteOnce
     persistentVolumeReclaimPolicy: Recycle
     nfs:
-      path: /log/efk/pv-es-1
+      path: /log/efk/pv-es0/
       server: 10.2.2.8

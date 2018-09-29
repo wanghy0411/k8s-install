@@ -54,7 +54,7 @@ metadata:
   namespace: kube-system
   labels:
     k8s-app: elasticsearch-logging
-    version: v6.3.2
+    version: v6.2.5
     kubernetes.io/cluster-service: "true"
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
@@ -63,17 +63,17 @@ spec:
   selector:
     matchLabels:
       k8s-app: elasticsearch-logging
-      version: v6.3.2
+      version: v6.2.5
   template:
     metadata:
       labels:
         k8s-app: elasticsearch-logging
-        version: v6.3.2
+        version: v6.2.5
         kubernetes.io/cluster-service: "true"
     spec:
       serviceAccountName: elasticsearch-logging
       containers:
-      - image: registry.cn-beijing.aliyuncs.com/efk-install/elasticsearch:v6.3.2
+      - image: registry.cn-beijing.aliyuncs.com/efk-install/elasticsearch:v6.2.5
         name: elasticsearch-logging
         resources:
           # need more cpu upon initialization, therefore burstable class
@@ -112,4 +112,4 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 45Gi
+          storage: 90Gi
