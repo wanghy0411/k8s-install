@@ -1,14 +1,21 @@
-1 修改hostname
+﻿1 修改hostname
 vi /etc/hosts
 2 禁用防火墙
 setenforce 0
 systemctl stop firewalld && systemctl disable firewalld
 
+3安装docker
 yum install -y https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/docker-ce-18.06.1.ce-3.el7.x86_64.rpm
 systemctl enable docker && systemctl restart docker
 iptables -P FORWARD ACCEPT
 
-vi /etc/sysctl.conf
+配置环境变量
+
+echo "
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+vm.swappiness=0
+" >> /etc/sysctl.conf
 sysctl -p
 
 
