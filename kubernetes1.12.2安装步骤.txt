@@ -1,0 +1,78 @@
+1 修改hostname
+vi /etc/hosts
+2 禁用防火墙
+setenforce 0
+systemctl stop firewalld && systemctl disable firewalld
+
+yum install -y https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/docker-ce-18.06.1.ce-3.el7.x86_64.rpm
+systemctl enable docker && systemctl restart docker
+iptables -P FORWARD ACCEPT
+
+vi /etc/sysctl.conf
+sysctl -p
+
+
+导入镜像
+
+
+docker load < /home/k8s_images/docker_images/etcd.tar
+docker load </home/k8s_images/docker_images/coredns.tar
+docker load </home/k8s_images/docker_images/kube-controllers.tar
+docker load </home/k8s_images/docker_images/cni.tar
+docker load </home/k8s_images/docker_images/alpine-oraclejdk8.tar
+docker load </home/k8s_images/docker_images/node.tar
+docker load </home/k8s_images/docker_images/kube-scheduler.tar
+docker load </home/k8s_images/docker_images/kube-controller-manager.tar
+docker load </home/k8s_images/docker_images/kube-apiserver.tar
+docker load </home/k8s_images/docker_images/pause.tar
+docker load </home/k8s_images/docker_images/kube-proxy.tar
+docker load </home/k8s_images/docker_images/traefik.tar
+给镜像打标签
+docker tag d048a102127b traefik:latest
+docker tag 51a9c329b7c5 k8s.gcr.io/kube-apiserver:v1.12.2
+docker tag 15e9da1ca195 k8s.gcr.io/kube-proxy:v1.12.2
+docker tag 15548c720a70 k8s.gcr.io/kube-controller-manager:v1.12.2
+docker tag d6d57c76136c k8s.gcr.io/kube-scheduler:v1.12.2
+docker tag 3ee5e1ce00fc frolvlad/alpine-oraclejdk8:slim
+docker tag eb79eb3e0190 calico/node:v3.3.0
+docker tag 12c23e5f5c5e calico/cni:v3.3.0
+docker tag c3b58a38b07a calico/kube-controllers:v3.3.0
+docker tag 3cab8e1b9802 k8s.gcr.io/etcd:3.2.24
+docker tag 367cdc8433a4 k8s.gcr.io/coredns:1.2.2
+docker tag da86e6ba6ca1 k8s.gcr.io/pause:3.1
+  
+
+2.1 设置使用阿里镜像安装建立repo文件：
+
+# vi /etc/yum.repos.d/kubernetes.repo
+
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+
+
+yum install -y kubelet-1.12.2 kubeadm-1.12.2 kubectl-1.12.2
+
+2.3 配置kubelet使用国内pause镜像，修改cgroup配置
+
+# vi /etc/sysconfig/kubelet
+
+添加配置如下：
+KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
+
+systemctl daemon-reload
+这时启动kubelet会报错，别急，先下载image
+systemctl enable kubelet && systemctl start kubelet
+
+
+///flannel
+kubeadm init --kubernetes-version=v1.12.2 --pod-network-cidr=10.244.0.0/16
+
+export KUBECONFIG=/etc/kubernetes/admin.conf
+source ~/.bash_profile
+kubectl apply -f kube-flannel.yml
+
