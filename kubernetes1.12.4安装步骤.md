@@ -131,7 +131,8 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 
 3.3 配置环境变量
 ```
-# export KUBECONFIG=/etc/kubernetes/admin.conf
+# vi ~/.bash_profile
+加入一行：export KUBECONFIG=/etc/kubernetes/admin.conf
 # source ~/.bash_profile
 ```
 
