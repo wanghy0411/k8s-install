@@ -1,6 +1,6 @@
 单服务器安装
 
-本文介绍如何在单一的服务器上安装kubernetes1.12.4
+本文介绍如何在单一的服务器上安装kubernetes1.12.7
 
 由于google被墙，国内网络不能正常访问；因此yaml文件中使用的很多镜像地址调整到本人在阿里云上申请的镜像服务，可以直接使用。
 
@@ -84,7 +84,10 @@ gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors
 
 2.2  安装 kubeadm, kubelet 和 kubectl
 ```
-# yum install -y kubelet-1.12.4 kubeadm-1.12.4 kubectl-1.12.4 ipvsadm
+# yum install -y kubelet-1.12.7
+# yum install -y kubeadm-1.12.7
+# yum install -y kubectl-1.12.7
+# yum install -y ipvsadm
 ```
 
 2.3 配置kubelet使用国内pause镜像，修改cgroup配置
@@ -106,18 +109,18 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 3.1 拉取镜像
 ```
 
-# docker pull mirrorgooglecontainers/kube-apiserver-amd64:v1.12.4
-# docker pull mirrorgooglecontainers/kube-proxy:v1.12.4
-# docker pull mirrorgooglecontainers/kube-controller-manager:v1.12.4
-# docker pull mirrorgooglecontainers/kube-scheduler:v1.12.4
+# docker pull mirrorgooglecontainers/kube-apiserver:v1.12.7
+# docker pull mirrorgooglecontainers/kube-proxy:v1.12.7
+# docker pull mirrorgooglecontainers/kube-controller-manager:v1.12.7
+# docker pull mirrorgooglecontainers/kube-scheduler:v1.12.7
 # docker pull mirrorgooglecontainers/etcd:3.2.24
 # docker pull kuberneter/coredns:1.2.2
 # docker pull mirrorgooglecontainers/pause:3.1
 给镜像打标签
-# docker tag mirrorgooglecontainers/kube-apiserver-amd64:v1.12.4 k8s.gcr.io/kube-apiserver:v1.12.4
-# docker tag mirrorgooglecontainers/kube-controller-manager:v1.12.4 k8s.gcr.io/kube-controller-manager:v1.12.4
-# docker tag mirrorgooglecontainers/kube-scheduler:v1.12.4 k8s.gcr.io/kube-scheduler:v1.12.4
-# docker tag mirrorgooglecontainers/kube-proxy:v1.12.4 k8s.gcr.io/kube-proxy:v1.12.4
+# docker tag mirrorgooglecontainers/kube-apiserver-amd64:v1.12.7 k8s.gcr.io/kube-apiserver:v1.12.7
+# docker tag mirrorgooglecontainers/kube-controller-manager:v1.12.7 k8s.gcr.io/kube-controller-manager:v1.12.7
+# docker tag mirrorgooglecontainers/kube-scheduler:v1.12.7 k8s.gcr.io/kube-scheduler:v1.12.7
+# docker tag mirrorgooglecontainers/kube-proxy:v1.12.7 k8s.gcr.io/kube-proxy:v1.12.7
 # docker tag mirrorgooglecontainers/pause:3.1 k8s.gcr.io/pause:3.1
 # docker tag mirrorgooglecontainers/etcd:3.2.24 k8s.gcr.io/etcd:3.2.24
 # docker tag kuberneter/coredns:1.2.2 k8s.gcr.io/coredns:1.2.2
@@ -125,7 +128,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 
 3.2 安装
 ```
-# kubeadm init --kubernetes-version=v1.12.4 --pod-network-cidr=10.244.0.0/16
+# kubeadm init --kubernetes-version=v1.12.7 --pod-network-cidr=10.244.0.0/16
 ```
 
 
