@@ -117,7 +117,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 # docker pull kuberneter/coredns:1.2.2
 # docker pull mirrorgooglecontainers/pause:3.1
 给镜像打标签
-# docker tag mirrorgooglecontainers/kube-apiserver-amd64:v1.12.7 k8s.gcr.io/kube-apiserver:v1.12.7
+# docker tag mirrorgooglecontainers/kube-apiserver:v1.12.7 k8s.gcr.io/kube-apiserver:v1.12.7
 # docker tag mirrorgooglecontainers/kube-controller-manager:v1.12.7 k8s.gcr.io/kube-controller-manager:v1.12.7
 # docker tag mirrorgooglecontainers/kube-scheduler:v1.12.7 k8s.gcr.io/kube-scheduler:v1.12.7
 # docker tag mirrorgooglecontainers/kube-proxy:v1.12.7 k8s.gcr.io/kube-proxy:v1.12.7
