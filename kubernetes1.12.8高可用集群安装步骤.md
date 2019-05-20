@@ -122,7 +122,18 @@ ETCD_INITIAL_CLUSTER="infra01=http://192.168.234.111:2380,infra02=http://192.168
 # iptables -P FORWARD ACCEPT
 ```
 
-2.3 配置系统路由参数
+2.3 加载ipvs相关内核模块
+```
+# modprobe ip_vs
+# modprobe ip_vs_rr
+# modprobe ip_vs_wrr
+# modprobe ip_vs_sh
+# modprobe nf_conntrack_ipv4
+# modprobe br_netfilter
+# lsmod | grep ip_vs
+```
+
+2.4 配置系统路由参数
 ```
 # vi /etc/sysctl.conf 添加以下内容
 net.ipv4.ip_forward = 1
@@ -139,17 +150,6 @@ net.netfilter.nf_conntrack_tcp_timeout_close_wait = 3600
 vm.swappiness=0
 
 # sysctl -p
-```
-
-2.4 加载ipvs相关内核模块
-```
-# modprobe ip_vs
-# modprobe ip_vs_rr
-# modprobe ip_vs_wrr
-# modprobe ip_vs_sh
-# modprobe nf_conntrack_ipv4
-# modprobe br_netfilter
-# lsmod | grep ip_vs
 ```
 
 2.5 设置使用阿里镜像安装建立repo文件：
@@ -653,4 +653,274 @@ kubeadm join 192.168.234.110:6443 --token yo2skv.twravx0k0x85g67d --discovery-to
 
 七、LVS对traefik的负载均衡
 
-后续补充
+参考如下keepalived.config配置文件：
+```
+#192.168.234.101
+! Configuration File for keepalived
+global_defs {
+   router_id LVS_k8s
+}
+ 
+vrrp_script CheckKeepalived {
+    script "/etc/keepalived/chk_keepalived.sh"
+    interval 3
+    weight -10
+    fall 2
+    rise 2
+}
+ 
+vrrp_instance VI_1 {
+    state MASTER
+    interface enp0s3
+    virtual_router_id 66
+    priority 100
+    advert_int 1
+    vrrp_garp_master_repeat 5
+    vrrp_garp_master_refresh 10
+    authentication {
+        auth_type PASS
+        auth_pass 6666
+    }
+    virtual_ipaddress {
+        192.168.234.110 dev enp0s3 label enp0s3:vip 
+    }
+    track_script {
+        CheckKeepalived
+    }
+}
+ 
+virtual_server 192.168.234.110 6443 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind DR
+#    persistence_timeout 0
+    protocol TCP
+ 
+    real_server 192.168.234.111 6443 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+    real_server 192.168.234.112 6443 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+    real_server 192.168.234.113 6443 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+}
+
+vrrp_instance VI_2 {
+    state BACKUP
+    interface enp0s3
+    virtual_router_id 67
+    priority 95
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 6666
+    }
+    virtual_ipaddress {
+        192.168.234.100 dev enp0s3 label enp0s3:vip 
+    }
+    track_script {
+        CheckKeepalived
+    }
+}
+
+virtual_server 192.168.234.100 30001 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind DR
+    persistence_timeout 0
+    protocol TCP
+
+    real_server 192.168.234.114 30001 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10
+        }
+    }
+    real_server 192.168.234.115 30001 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10
+        }
+    }
+}
+```
+
+```
+! Configuration File for keepalived
+global_defs {
+   router_id LVS_k8s
+}
+ 
+vrrp_script CheckKeepalived {
+    script "/etc/keepalived/chk_keepalived.sh"
+    interval 3
+    weight -10
+    fall 2
+    rise 2
+}
+ 
+vrrp_instance VI_1 {
+    state BACKUP
+    interface enp0s3
+    virtual_router_id 66
+    priority 95
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass 6666
+    }
+    virtual_ipaddress {
+        192.168.234.110 dev enp0s3 label enp0s3:vip
+    }
+    track_script {
+        CheckKeepalived
+    }
+}
+ 
+virtual_server 192.168.234.110 6443 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind DR
+    persistence_timeout 0
+    protocol TCP
+ 
+    real_server 192.168.234.111 6443 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+    real_server 192.168.234.112 6443 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+    real_server 192.168.234.113 6443 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+}
+
+vrrp_instance VI_2 {
+    state MASTER
+    interface enp0s3
+    virtual_router_id 67
+    priority 100
+    advert_int 1
+    vrrp_garp_master_repeat 5
+    vrrp_garp_master_refresh 10
+    authentication {
+        auth_type PASS
+        auth_pass 6666
+    }
+    virtual_ipaddress {
+        192.168.234.100 dev enp0s3 label enp0s3:vip 
+    }
+    track_script {
+        CheckKeepalived
+    }
+}
+ 
+virtual_server 192.168.234.100 30001 {
+    delay_loop 6
+    lb_algo rr
+    lb_kind DR
+    protocol TCP
+ 
+    real_server 192.168.234.114 30001 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+    real_server 192.168.234.115 30001 {
+        weight 10
+        TCP_CHECK {
+            connect_timeout 10 
+        }
+    }
+}
+```
+
+说明:
+
+a. LVS-1作为k8s-master的主负载均衡节点, LVS-2为BACKUP; LVS-2作为traefik的主负载均衡节点, LVS-1为BACKUP. 这样可以分摊网络流量, 避免全部集中在一台服务器上
+
+b. traefik应使用DaemonSet方式部署, 用nodeSelector方式指定部署traefik的节点(边缘节点edgenode), 用hostPort方式对外提供服务, lvs对这些边缘节点进行负载均衡
+
+请参考如下traefik部署配置文件traefik-daemonset.yaml
+```
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+  namespace: kube-system
+---
+kind: DaemonSet
+apiVersion: extensions/v1beta1
+metadata:
+  name: traefik-ingress-controller
+  namespace: kube-system
+  labels:
+    k8s-app: traefik-ingress-lb
+spec:
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: traefik
+        name: traefik-ingress-lb
+        ports:
+        - name: http
+          containerPort: 80
+          hostPort: 30001
+        - name: admin
+          containerPort: 8080
+        securityContext:
+          privileged: true
+        args:
+        - --api
+        - --kubernetes
+        - --logLevel=INFO
+      nodeSelector:
+        edgenode: "true"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: traefik-ingress-service
+  namespace: kube-system
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+    - nodePort: 30001
+      protocol: TCP
+      port: 30001
+      targetPort: 80
+      name: web
+    - protocol: TCP
+      port: 8080
+      name: admin
+  type: NodePort
+```
