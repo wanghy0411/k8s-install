@@ -70,8 +70,9 @@ IP: 192.168.234.110
 # setenforce 0
 # systemctl stop firewalld && systemctl disable firewalld
 # vi /etc/selinux/config  修改SELINUX=disabled
-```
+
 注意：不是修改SELINUXTYPE
+```
 
 二、etcd服务器安装(三台master上安装)
 
@@ -189,7 +190,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 ```
 
 2.9 拉取镜像
-``
+```
 
 # docker pull mirrorgooglecontainers/kube-apiserver:v1.12.8
 # docker pull mirrorgooglecontainers/kube-proxy:v1.12.8
@@ -216,6 +217,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 三、首台master安装
 
 3.1 写hosts文件,解析本机的机器名
+
 ```
 # vi /etc/hosts
 
@@ -227,6 +229,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 3.2 LVS的real_server安装
 
 3.2.1 配置VIP地址绑定在lo网卡上
+
 ```
 # mkdir /opt/scripts
 # vi /opt/scripts/lvs_real.sh
@@ -287,11 +290,13 @@ exit 0
 ```
 
 3.2.2 查看lo网口绑定VIP状态
+
 ```
 # ip a
 ```
 
 3.2.3 配置lvs_real.sh脚本开机自动执行
+
 ```
 # vi /etc/rc.d/rc.local
 #!/bin/bash
@@ -312,11 +317,13 @@ bash /opt/scripts/lvs_real.sh start
 ```
 
 添加执行权限
+
 ```
 # chmod +x /etc/rc.d/rc.local
 ```
 
 3.2.4 编辑rc-local.service在末尾添加[Install]部分
+
 ```
 # vi /usr/lib/systemd/system/rc-local.service
 #  This file is part of systemd.
@@ -341,9 +348,11 @@ RemainAfterExit=yes
  
 [Install]
 WantedBy=multi-user.target
+
 ```
 
 3.2.5 设置开机启动
+
 ```
 systemctl daemon-reload
 systemctl enable rc-local.service
@@ -354,12 +363,15 @@ systemctl start rc-local.service
 3.3 k8s-master01安装
 
 3.3.1 建立模板配置文件
+
 ```
 # mkdir /root/k8s-install
 # cd /root/k8s-install
 # vi kubeadm-config.yaml
 ```
+
 模板配置文件内容如下，注意管理端口设为虚拟IP
+
 ```
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: ClusterConfiguration
@@ -379,30 +391,35 @@ kubeProxy:
 ```
 
 3.3.2 安装k8s-master01
+
 ```
 # kubeadm init --config kubeadm-config.yaml
 ```
 
 3.3.3 配置环境变量
+
 ```
 # vi ~/.bash_profile
 加入一行：export KUBECONFIG=/etc/kubernetes/admin.conf
 # source ~/.bash_profile
+```
 
 3.3.4 flannel安装
 
 ```
 # kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml
 ```
-```
+
 
 3.3.5 拷贝权限文件到其它二台master服务器上
 
 先在另外两台服务器上建立目录
+
 ```
 # mkdir /etc/kubernetes/pki
 ```
 在master1上操作
+
 ```
 # scp /etc/kubernetes/pki/* k8s-master02:/etc/kubernetes/pki/
 # scp /etc/kubernetes/admin.conf k8s-master02:/etc/kubernetes/admin.conf
@@ -416,6 +433,7 @@ kubeProxy:
 只有配置LVS负载均衡服务后，其它master才可以继续按照
 
 4.1 Linux 内核参数配置
+
 ```
 # vi /etc/sysctl.conf
 net.ipv4.ip_forward = 1
@@ -425,6 +443,7 @@ net.ipv4.ip_nonlocal_bind = 1
 ```
 
 4.2 安装keepalived
+
 ```
 # yum -y install keepalived
 ```
@@ -447,6 +466,7 @@ fi
 4.4 配置keepalived
 
 lvs-1的配置文件
+
 ```
 # vi /etc/keepalived/keepalived.conf
 
@@ -512,6 +532,7 @@ virtual_server 192.168.234.110 6443 {
 ```
 
 lvs-2的配置文件
+
 ```
 # vi /etc/keepalived/keepalived.conf
 
@@ -577,6 +598,7 @@ virtual_server 192.168.234.110 6443 {
 ```
 
 注意
+
 ```
 * 根据服务器网卡名称调整配置
 * 192.168.234.112和192.168.234.113两台服务器暂时未搭好, 因此此处应是注释掉的
@@ -584,6 +606,7 @@ virtual_server 192.168.234.110 6443 {
 ```
 
 4.5 启动keepalived服务
+
 ```
 # systemctl enable keepalived & systemctl start keepalived
 ```
@@ -591,17 +614,20 @@ virtual_server 192.168.234.110 6443 {
 五、剩余2台master安装
 
 5.1 添加到k8s集群
+
 ```
 kubeadm join 192.168.234.110:6443 --token yo2skv.twravx0k0x85g67d --discovery-token-ca-cert-hash sha256:415b5d84051dc6cace21410f5159ae305e2cbe44f9f4a3ad393e4809e964a743  --experimental-control-plane
 ```
 
 5.2 配置环境变量
+
 ```
 # vi ~/.bash_profile
 加入一行：export KUBECONFIG=/etc/kubernetes/admin.conf
 # source ~/.bash_profile
 
 5.3 安装验证
+
 ```
 # kubectl get pod -n kube-system
 # kubectl get node
