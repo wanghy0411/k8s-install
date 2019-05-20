@@ -555,13 +555,11 @@ vrrp_script CheckKeepalived {
 }
 
 vrrp_instance VI_1 {
-    state SLAVE
+    state BACKUP
     interface enp0s3 #此处为网卡名
     virtual_router_id 66
     priority 95
     advert_int 1
-    vrrp_garp_master_repeat 5
-    vrrp_garp_master_refresh 10
     authentication {
         auth_type PASS
         auth_pass 6666
@@ -578,7 +576,7 @@ virtual_server 192.168.234.110 6443 {
     delay_loop 6
     lb_algo rr
     lb_kind DR
-#    persistence_timeout 0
+    persistence_timeout 0
     protocol TCP
 
     real_server 192.168.234.111 6443 {
@@ -607,7 +605,7 @@ virtual_server 192.168.234.110 6443 {
 ```
 * 根据服务器网卡名称调整配置
 * 192.168.234.112和192.168.234.113两台服务器暂时未搭好, 因此此处应是注释掉的
-* 主备两台lvs的keepalived.conf有区别，缺省一个为MASTER一个为SLAVE；另外权重一个为100一个为95或是比100小的值
+* 主备两台lvs的keepalived.conf有区别，缺省一个为MASTER一个为SLAVE
 ```
 
 4.5 启动keepalived服务
