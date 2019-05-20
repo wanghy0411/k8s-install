@@ -190,8 +190,8 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 ```
 
 2.9 拉取镜像
-```
 
+```
 # docker pull mirrorgooglecontainers/kube-apiserver:v1.12.8
 # docker pull mirrorgooglecontainers/kube-proxy:v1.12.8
 # docker pull mirrorgooglecontainers/kube-controller-manager:v1.12.8
@@ -233,6 +233,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 ```
 # mkdir /opt/scripts
 # vi /opt/scripts/lvs_real.sh
+
 #!/bin/bash
 #description: Config realserver
 
@@ -299,6 +300,7 @@ exit 0
 
 ```
 # vi /etc/rc.d/rc.local
+
 #!/bin/bash
 # THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
 #
@@ -326,6 +328,7 @@ bash /opt/scripts/lvs_real.sh start
 
 ```
 # vi /usr/lib/systemd/system/rc-local.service
+
 #  This file is part of systemd.
 #
 #  systemd is free software; you can redistribute it and/or modify it
@@ -436,6 +439,7 @@ kubeProxy:
 
 ```
 # vi /etc/sysctl.conf
+
 net.ipv4.ip_forward = 1
 net.ipv4.ip_nonlocal_bind = 1
 
@@ -452,6 +456,7 @@ net.ipv4.ip_nonlocal_bind = 1
 
 ```
 # vi /etc/keepalived/chk_keepalived.sh
+
 #!/bin/bash
 keepalived_counter=$(ps -C keepalived --no-heading|wc -l)
 
@@ -625,6 +630,7 @@ kubeadm join 192.168.234.110:6443 --token yo2skv.twravx0k0x85g67d --discovery-to
 # vi ~/.bash_profile
 加入一行：export KUBECONFIG=/etc/kubernetes/admin.conf
 # source ~/.bash_profile
+```
 
 5.3 安装验证
 
