@@ -655,7 +655,7 @@ kubeadm join 192.168.234.110:6443 --token yo2skv.twravx0k0x85g67d --discovery-to
 
 参考如下keepalived.config配置文件：
 ```
-#192.168.234.101
+#192.168.234.101(lvs-1)
 ! Configuration File for keepalived
 global_defs {
    router_id LVS_k8s
@@ -757,6 +757,7 @@ virtual_server 192.168.234.100 30001 {
 ```
 
 ```
+#192.168.234.102(lvs-2)
 ! Configuration File for keepalived
 global_defs {
    router_id LVS_k8s
