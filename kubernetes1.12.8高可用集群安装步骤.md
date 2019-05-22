@@ -96,6 +96,7 @@ ETCD_ADVERTISE_CLIENT_URLS="http://192.168.234.111:2379"
 ETCD_INITIAL_CLUSTER="infra01=http://192.168.234.111:2380,infra02=http://192.168.234.112:2380,infra03=http://192.168.234.113:2380"
 ```
 注意：ETCD_INITIAL_ADVERTISE_PEER_URLS和ETCD_ADVERTISE_CLIENT_URLS内容的IP地址和etcd_name名字要根据不同服务器调整
+
 另，只有2台服务启动后，集群才可能进行连接测试，systemctl status etcd才可能是running
 
 3、启动etcd服务
