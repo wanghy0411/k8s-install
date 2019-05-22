@@ -621,6 +621,7 @@ virtual_server 192.168.234.110 6443 {
 ```
 kubeadm join 192.168.234.110:6443 --token yo2skv.twravx0k0x85g67d --discovery-token-ca-cert-hash sha256:415b5d84051dc6cace21410f5159ae305e2cbe44f9f4a3ad393e4809e964a743  --experimental-control-plane
 ```
+注意: join命令后面加入--experimental-control-plane参数，这样可使新增的服务器直接成为master
 
 5.2 配置环境变量
 
