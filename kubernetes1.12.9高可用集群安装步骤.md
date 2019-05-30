@@ -1,4 +1,4 @@
-本文介绍如何如何部署一个kubernetes1.12.8的高可用集群
+本文介绍如何如何部署一个kubernetes1.12.9的高可用集群
 说明: 
 
 2LVS+3MASTER+WORKER
@@ -170,9 +170,9 @@ gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors
 
 2.6  安装 kubeadm, kubelet 和 kubectl
 ```
-# yum install -y kubectl-1.12.8
-# yum install -y kubelet-1.12.8
-# yum install -y kubeadm-1.12.8
+# yum install -y kubectl-1.12.9
+# yum install -y kubelet-1.12.9
+# yum install -y kubeadm-1.12.9
 
 ```
 
@@ -193,24 +193,24 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 2.9 拉取镜像
 
 ```
-# docker pull mirrorgooglecontainers/kube-apiserver:v1.12.8
-# docker pull mirrorgooglecontainers/kube-proxy:v1.12.8
-# docker pull mirrorgooglecontainers/kube-controller-manager:v1.12.8
-# docker pull mirrorgooglecontainers/kube-scheduler:v1.12.8
+# docker pull mirrorgooglecontainers/kube-apiserver:v1.12.9
+# docker pull mirrorgooglecontainers/kube-proxy:v1.12.9
+# docker pull mirrorgooglecontainers/kube-controller-manager:v1.12.9
+# docker pull mirrorgooglecontainers/kube-scheduler:v1.12.9
 # docker pull kuberneter/coredns:1.2.2
 # docker pull mirrorgooglecontainers/pause:3.1
 给镜像打标签
-# docker tag mirrorgooglecontainers/kube-apiserver:v1.12.8 k8s.gcr.io/kube-apiserver:v1.12.8
-# docker tag mirrorgooglecontainers/kube-controller-manager:v1.12.8 k8s.gcr.io/kube-controller-manager:v1.12.8
-# docker tag mirrorgooglecontainers/kube-scheduler:v1.12.8 k8s.gcr.io/kube-scheduler:v1.12.8
-# docker tag mirrorgooglecontainers/kube-proxy:v1.12.8 k8s.gcr.io/kube-proxy:v1.12.8
+# docker tag mirrorgooglecontainers/kube-apiserver:v1.12.9 k8s.gcr.io/kube-apiserver:v1.12.9
+# docker tag mirrorgooglecontainers/kube-controller-manager:v1.12.9 k8s.gcr.io/kube-controller-manager:v1.12.9
+# docker tag mirrorgooglecontainers/kube-scheduler:v1.12.9 k8s.gcr.io/kube-scheduler:v1.12.9
+# docker tag mirrorgooglecontainers/kube-proxy:v1.12.9 k8s.gcr.io/kube-proxy:v1.12.9
 # docker tag mirrorgooglecontainers/pause:3.1 k8s.gcr.io/pause:3.1
 # docker tag kuberneter/coredns:1.2.2 k8s.gcr.io/coredns:1.2.2
 删除临时镜像
-# docker rmi mirrorgooglecontainers/kube-apiserver:v1.12.8
-# docker rmi mirrorgooglecontainers/kube-proxy:v1.12.8
-# docker rmi mirrorgooglecontainers/kube-controller-manager:v1.12.8
-# docker rmi mirrorgooglecontainers/kube-scheduler:v1.12.8
+# docker rmi mirrorgooglecontainers/kube-apiserver:v1.12.9
+# docker rmi mirrorgooglecontainers/kube-proxy:v1.12.9
+# docker rmi mirrorgooglecontainers/kube-controller-manager:v1.12.9
+# docker rmi mirrorgooglecontainers/kube-scheduler:v1.12.9
 # docker rmi kuberneter/coredns:1.2.2
 # docker rmi mirrorgooglecontainers/pause:3.1
 ```
@@ -379,7 +379,7 @@ systemctl start rc-local.service
 ```
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: ClusterConfiguration
-kubernetesVersion: 1.12.8
+kubernetesVersion: 1.12.9
 apiServerCertSANs:
 - "192.168.234.110"
 controlPlaneEndpoint: "192.168.234.110:6443"
