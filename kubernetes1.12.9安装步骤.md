@@ -165,7 +165,7 @@ master节点上一般不会再分配pod，以保障master的高效运行，
 ##小技巧
 可以使用如下语句，进入容器的sh界面
 ```
-# kubectl exec -it pod_name -n kube-system /bin/sh
+# kubectl exec -it pod_name /bin/sh
 ```
 其中pod_name为具体的pod名字，查pod名字的方法
 ```
