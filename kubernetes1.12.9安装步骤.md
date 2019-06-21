@@ -13,6 +13,7 @@ Hostname: k8s-single
 ```
 
 一、准备工作：
+
 1.1 关闭swap,最好是安装CentOS的时候就不安装swap分区
 
 1.2 写hosts文件,解析本机的机器名
