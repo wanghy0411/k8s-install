@@ -85,9 +85,9 @@ gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors
 
 2.2  安装 kubeadm, kubelet 和 kubectl
 ```
+# yum install -y kubectl-1.12.9
 # yum install -y kubelet-1.12.9
 # yum install -y kubeadm-1.12.9
-# yum install -y kubectl-1.12.9
 # yum install -y ipvsadm
 ```
 
