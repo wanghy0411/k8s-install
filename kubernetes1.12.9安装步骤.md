@@ -40,12 +40,22 @@ Hostname: k8s-single
 
 # systemctl enable docker && systemctl restart docker
 ```
-1.5  开启forward
+
+1.5 修改docker默认路径
+```
+# vi /etc/systemd/system/multi-user.target.wants/docker.service
+ExecStart=/usr/bin/dockerd --graph=/home/dockerdata --storage-driver=overlay
+注意：/home/dockerdata 建立的目录
+# systemctl daemon-reload
+# systemctl enable kubelet && systemctl start kubelet
+```
+
+1.6  开启forward
 ```
 # iptables -P FORWARD ACCEPT
 ```
 
-1.6 配置系统路由参数
+1.7 配置系统路由参数
 ```
 # echo "
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -56,7 +66,7 @@ vm.swappiness=0
 # sysctl -p
 ```
 
-1.7 加载ipvs相关内核模块
+1.8 加载ipvs相关内核模块
 ```
 # modprobe ip_vs
 # modprobe ip_vs_rr
