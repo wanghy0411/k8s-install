@@ -47,7 +47,7 @@ Hostname: k8s-single
 ExecStart=/usr/bin/dockerd --graph=/home/dockerdata --storage-driver=overlay
 注意：/home/dockerdata 建立的目录
 # systemctl daemon-reload
-# systemctl enable kubelet && systemctl start kubelet
+# systemctl restart docker
 ```
 
 1.6  开启forward
@@ -154,8 +154,7 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 
 使用kube-flannel.yml文件
 ```
-# wget  https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml
-# kubectl apply -f kube-flannel.yml
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/bc79dd1505b0c8681ece4de4c0d86c5cd2643275/Documentation/kube-flannel.yml
 ```
 
 3.5 安装验证
