@@ -142,6 +142,10 @@ KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"
 # kubeadm init --kubernetes-version=v1.12.10 --pod-network-cidr=10.244.0.0/16
 ```
 
+注意：如果安装失败重新安装时, 应执行如下语句恢复初始状态
+```
+# kubeadm reset
+```
 
 3.3 配置环境变量
 ```
